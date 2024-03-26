@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <algorithm> 
+#include <algorithm>
+#include <stdio.h>
 
 using namespace std;
 vector <int> PixVal;
@@ -16,7 +17,7 @@ void Numbercatcher(string PixInfline)
     string temp;
     int found;
     tmp << PixInfline;
-    while (!tmp.eof()) 
+    while (!tmp.eof())
     {
         tmp >> temp;
         if (stringstream(temp) >> found)
@@ -25,17 +26,23 @@ void Numbercatcher(string PixInfline)
         }
     }
 }
-
+unsigned long CRGB(int r, int g, int b)
+{
+    return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+}
 
 int main()
 {
-    string line;
-    string test;
-    int type = 0, width = 0, height = 0, uniq = 0, max =0;
+    start:
+    string line,test,path,answer;
+    int type = 0, width = 0, height = 0, uniq = 0,notuniq = 0, max = 0,x=0;
     fstream file;
-    string path = "C:\\Users\\Vanisch\\source\\repos\\Pixel\\FEEP.pgm";
     vector <string> PixInf;
     vector <int> PixMax;
+    vector <int> temp;
+
+    cout << "Input path to your image.(Remember to use double backslash!!): ";
+    cin >> path;
 
     file.open(path, ios::in);
     if (file.good() == true)
@@ -68,25 +75,55 @@ int main()
         {
             PixVal.erase(PixVal.begin());
         }
-
+        if (type == 3)
+        {
+            for (int i = 0;i <= (PixVal.size() / 3) - 1;i++)
+            {
+                temp.push_back(CRGB(PixVal[x], PixVal[x + 1], PixVal[x + 2]));
+                x = x + 3;
+            }
+        }
+        PixVal = temp;
         vector <int> temp = PixVal;
         sort(temp.begin(), temp.end());
         temp.erase(unique(temp.begin(), temp.end()), temp.end());
         uniq = temp.size();
-        if (type == 1|| type==2)
+        for (int i = 0; i <= temp.size() - 1;i++)
         {
-            for (int i = 0; i <= temp.size() - 1;i++)
-            {
-                PixMax.push_back(temp[i]);
-                PixMax.push_back(count(PixVal.begin(), PixVal.end(), temp[i]));
+            PixMax.push_back(temp[i]);
+            PixMax.push_back(count(PixVal.begin(), PixVal.end(), temp[i]));
 
-            }
         }
-        if (type == 3)
-        for (int i = 0;i <= PixMax.size() - 1;i++)
+        x = 0;
+
+        for (int i = 0; i <= (PixMax.size() / 2) - 1;i++)
         {
-            cout << PixMax[i] << endl;
+            if (PixMax[x + 1] > max)
+            {
+                max = PixMax[x + 1];
+                notuniq = PixMax[x];
+            }
+            x = x + 2;
         }
-        return(0);
+        cout << "Width= " << width << " pixels." << endl << "Height= " << height << " pixels." << endl << "The most common color is: " << notuniq << " and it appears " << max << " times." << endl << "Total numebr of unique colors is: " << uniq << "." << endl;
+        while (true)
+        {
+            cout << "Do you want to load differen image?. (Y/N) ";
+            cin >> answer;
+            if (answer == "Y")
+            {
+                goto start;
+            }
+            if (answer == "N")
+            {
+                cout << "Thanks for using my program :D";
+                return 0;
+            }
+            cout << "!! Write correct response !!";
+        }
+
     }
+    else
+        cout << "Invalid path!!";
+    return(404);
 }
