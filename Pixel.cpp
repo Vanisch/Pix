@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm> 
 
 using namespace std;
 vector <int> PixVal;
@@ -15,7 +16,7 @@ void Numbercatcher(string PixInfline)
     string temp;
     int found;
     tmp << PixInfline;
-    while (!tmp.eof())
+    while (!tmp.eof()) 
     {
         tmp >> temp;
         if (stringstream(temp) >> found)
@@ -26,15 +27,15 @@ void Numbercatcher(string PixInfline)
 }
 
 
-
 int main()
 {
     string line;
     string test;
-    int type = 0, width = 0, height = 0;
+    int type = 0, width = 0, height = 0, uniq = 0, max =0;
     fstream file;
-    string path = "C:\\Users\\Vanisch\\source\\repos\\Pixel\\letterj.pbm";
+    string path = "C:\\Users\\Vanisch\\source\\repos\\Pixel\\FEEP.pgm";
     vector <string> PixInf;
+    vector <int> PixMax;
 
     file.open(path, ios::in);
     if (file.good() == true)
@@ -63,12 +64,29 @@ int main()
         PixVal.erase(PixVal.begin());
         height = PixVal[0];
         PixVal.erase(PixVal.begin());
-        cout << type << " " << width << " " << height << endl;
-        for (int i = 0;i <= PixVal.size() - 1;i++)
+        if (type == 2 || type == 3)
         {
-            cout << PixVal[i];
+            PixVal.erase(PixVal.begin());
         }
 
+        vector <int> temp = PixVal;
+        sort(temp.begin(), temp.end());
+        temp.erase(unique(temp.begin(), temp.end()), temp.end());
+        uniq = temp.size();
+        if (type == 1|| type==2)
+        {
+            for (int i = 0; i <= temp.size() - 1;i++)
+            {
+                PixMax.push_back(temp[i]);
+                PixMax.push_back(count(PixVal.begin(), PixVal.end(), temp[i]));
+
+            }
+        }
+        if (type == 3)
+        for (int i = 0;i <= PixMax.size() - 1;i++)
+        {
+            cout << PixMax[i] << endl;
+        }
+        return(0);
     }
-    return(0);
 }
