@@ -6,15 +6,35 @@
 #include <sstream>
 
 using namespace std;
+vector <int> PixVal;
+
+
+void Numbercatcher(string PixInfline)
+{
+    stringstream tmp;
+    string temp;
+    int found;
+    tmp << PixInfline;
+    while (!tmp.eof())
+    {
+        tmp >> temp;
+        if (stringstream(temp) >> found)
+        {
+            PixVal.push_back(found);
+        }
+    }
+}
+
+
 
 int main()
 {
     string line;
-    int type,width,height;
+    string test;
+    int type = 0, width = 0, height = 0, x = 1, y = 0;
     fstream file;
     string path = "C:\\Users\\Vanisch\\source\\repos\\Pixel\\letterj.pbm";
     vector <string> PixInf;
-    vector <int> PixVal;
 
     file.open(path, ios::in);
     if (file.good() == true)
@@ -28,15 +48,31 @@ int main()
                 PixInf.push_back(line);
         }
         file.close();
-        type = PixInf[0][1];
+        if (PixInf[0][1] == '1' || PixInf[0][1] == '4')
+            type = 1;
+        if (PixInf[0][1] == '2' || PixInf[0][1] == '5')
+            type = 2;
+        if (PixInf[0][1] == '3' || PixInf[0][1] == '6')
+            type = 3;
         PixInf.erase(PixInf.begin());
-        
-        for (int i = 0;i <= PixInf.size()-1;i++)
-        { 
-            type = PixInf[i][1];
-
+        for (int i = 0;i <= PixInf.size() - 1;i++)
+        {
+            Numbercatcher(PixInf[i]);
+        }
+        width = PixVal[0];
+        PixVal.erase(PixVal.begin());
+        height = PixVal[0];
+        PixVal.erase(PixVal.begin());
+        cout << type << " " << width << " " << height << endl;
+        for (int i = 0;i <= PixVal.size() - 1;i++)
+        {
+            y = x % 6;
+            cout << PixVal[i];
+            if (y == 0)
+                cout << endl;
 
         }
+
     }
     return(0);
 }
