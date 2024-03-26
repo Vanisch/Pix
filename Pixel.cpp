@@ -31,7 +31,7 @@ int main()
 {
     string line;
     string test;
-    int type = 0, width = 0, height = 0, x = 1, y = 0;
+    int type = 0, width = 0, height = 0;
     fstream file;
     string path = "C:\\Users\\Vanisch\\source\\repos\\Pixel\\letterj.pbm";
     vector <string> PixInf;
@@ -66,11 +66,7 @@ int main()
         cout << type << " " << width << " " << height << endl;
         for (int i = 0;i <= PixVal.size() - 1;i++)
         {
-            y = x % 6;
             cout << PixVal[i];
-            if (y == 0)
-                cout << endl;
-
         }
 
     }
